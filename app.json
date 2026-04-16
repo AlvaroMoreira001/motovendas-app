@@ -8,6 +8,7 @@
     "android": {
       "package": "com.motovendas.app",
       "versionCode": 1,
+      "usesCleartextTraffic": true,
       "permissions": [
         "android.permission.INTERNET",
         "android.permission.ACCESS_NETWORK_STATE",
