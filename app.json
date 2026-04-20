@@ -4,15 +4,23 @@
     "slug": "motovendas-app",
     "version": "1.0.0",
     "orientation": "portrait",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0a0a0b"
+    },
     "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ff7c0a"
+      },
       "package": "com.motovendas.app",
       "versionCode": 1,
-      "usesCleartextTraffic": true,
       "permissions": [
-        "android.permission.INTERNET",
-        "android.permission.ACCESS_NETWORK_STATE",
-        "android.permission.RECORD_AUDIO"
+        "INTERNET",
+        "ACCESS_NETWORK_STATE"
       ]
     },
     "plugins": [
@@ -20,14 +28,15 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "O app precisa acessar suas fotos para você escolher uma imagem.",
-          "cameraPermission": "O app precisa da câmera para você tirar uma foto."
+          "photosPermission": "Permite acessar a galeria para foto dos produtos.",
+          "cameraPermission": "Permite usar a câmera para foto dos produtos."
         }
-      ]
+      ],
+      "expo-font"
     ],
     "extra": {
       "eas": {
-        "projectId": "134a6392-6199-43cc-804e-37cbc836866c"
+        "projectId": "SEU_PROJECT_ID_AQUI"
       }
     }
   }

@@ -1,5 +1,6 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
-import { NavigationContainer } from '@react-navigation/native'
+import { useEffect } from 'react'
+import { View, Text, TouchableOpacity, StyleSheet, StatusBar } from 'react-native'
+import { NavigationContainer, DrawerActions } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createDrawerNavigator, DrawerContentScrollView } from '@react-navigation/drawer'
 import { useAuth } from '../context/AuthContext'

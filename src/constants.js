@@ -5,10 +5,7 @@
 
 // ── URL do backend ─────────────────────────────────────────
 // Troque pela URL do Railway em produção
-// Em builds (EAS), prefira configurar via variável de ambiente:
-// EXPO_PUBLIC_API_URL=https://seu-backend.com
-const envApiUrl = (process.env.EXPO_PUBLIC_API_URL || '').trim()
-export const API_URL = (envApiUrl || 'http://192.168.15.166:3000').replace(/\/$/, '')
+export const API_URL = 'http://192.168.15.166:3000'
 // ATENÇÃO: Em desenvolvimento, use o IP local da sua máquina
 // (não use "localhost" — o celular não consegue acessar)
 // Para descobrir seu IP: no terminal, rode "ipconfig" (Windows) ou "ifconfig" (Mac/Linux)

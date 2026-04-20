@@ -53,28 +53,11 @@ npm install
 
 ### PASSO 2 — Configurar a URL do backend
 
-Você pode configurar a URL da API de 2 formas:
-
-1) **Recomendado (EAS / builds):** variável de ambiente `EXPO_PUBLIC_API_URL`
-2) **Fallback local:** editando `src/constants.js`
-
-#### Opção 1 (recomendado) — `EXPO_PUBLIC_API_URL`
-
-- **Dev local (Expo Go):** crie um `.env` e rode o Metro (ou exporte no terminal)
-- **EAS Build:** configure em `eas.json` (por perfil) ou no dashboard do Expo (Environment variables)
-
-Exemplo:
-```bash
-EXPO_PUBLIC_API_URL=https://seu-backend.com
-```
-
-#### Opção 2 — editar `src/constants.js`
-
-Abra o arquivo `src/constants.js` e troque o IP/URL:
+Abra o arquivo `src/constants.js` e troque o IP:
 
 ```js
 // Para desenvolvimento local:
-// export const API_URL = 'http://SEU_IP_LOCAL:3000'
+export const API_URL = 'http://SEU_IP_LOCAL:3000'
 // Exemplo: 'http://192.168.1.15:3000'
 
 // Para produção (Railway):
@@ -93,8 +76,6 @@ ifconfig | grep "inet "
 
 > ⚠️ Use o IP da sua máquina, NÃO "localhost".
 > O celular/emulador não consegue acessar "localhost" do PC.
-
-> ⚠️ Se você instalar um APK feito no EAS (preview/production), ele **não** vai conseguir acessar um backend que está rodando “só no seu PC” quando o celular estiver fora da sua rede. Para isso, publique o backend (Railway/Render/etc) ou use um túnel (ex: ngrok) e aponte `EXPO_PUBLIC_API_URL` para a URL pública.
 
 ---
 

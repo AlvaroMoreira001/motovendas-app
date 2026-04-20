@@ -46,21 +46,9 @@ export default function HomeScreen({ navigation, drawerNav }) {
 
       {/* Header */}
       <View style={styles.header}>
-        <View style={styles.headerLeft}>
-          <TouchableOpacity
-            onPress={() => nav?.openDrawer?.()}
-            style={styles.menuBtn}
-            activeOpacity={0.7}
-          >
-            <View style={styles.menuLine} />
-            <View style={styles.menuLine} />
-            <View style={styles.menuLine} />
-          </TouchableOpacity>
-
-          <View>
-            <Text style={styles.greeting}>Olá, {user?.name?.split(' ')[0]} 👋</Text>
-            <Text style={styles.greetingSub}>Pronto para vender?</Text>
-          </View>
+        <View>
+          <Text style={styles.greeting}>Olá, {user?.name?.split(' ')[0]} 👋</Text>
+          <Text style={styles.greetingSub}>Pronto para vender?</Text>
         </View>
         <TouchableOpacity onPress={handleLogout} style={styles.logoutBtn}>
           <Text style={{ color: colors.textMuted, fontSize: 13 }}>Sair</Text>
@@ -205,9 +193,6 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     paddingBottom: 16,
   },
-  headerLeft: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  menuBtn: { width: 36, height: 36, justifyContent: 'center', gap: 5, paddingHorizontal: 6 },
-  menuLine: { height: 2, backgroundColor: colors.textMuted, borderRadius: 1 },
   greeting: { color: colors.textPrimary, fontSize: 22, fontWeight: '800' },
   greetingSub: { color: colors.textMuted, fontSize: 13, marginTop: 2 },
   logoutBtn: {
