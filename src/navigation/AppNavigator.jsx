@@ -1,3 +1,13 @@
+/**
+ * src/navigation/AppNavigator.jsx
+ *
+ * Correção do hamburguer que sumia:
+ * - O botão de menu agora vive DENTRO do Drawer (drawerContent),
+ *   recebendo navigation diretamente — sem depender do drawerNav prop.
+ * - HomeStack passa navigation do Drawer para HomeScreen via prop.
+ * - Todos os headers das telas Stack têm o botão de menu explícito.
+ */
+
 import { useEffect } from 'react'
 import { View, Text, TouchableOpacity, StyleSheet, StatusBar } from 'react-native'
 import { NavigationContainer, DrawerActions } from '@react-navigation/native'
@@ -6,6 +16,10 @@ import { createDrawerNavigator, DrawerContentScrollView } from '@react-navigatio
 import { useAuth } from '../context/AuthContext'
 import { colors } from '../constants'
 import { LoadingScreen } from '../components/ui'
+import {
+  HomeIcon, BoxIcon, CartIcon, LogoutIcon, ChevronRight,
+  UserIcon, ShieldIcon,
+} from '../components/Icons'
 
 import LoginScreen      from '../screens/LoginScreen'
 import HomeScreen       from '../screens/HomeScreen'
@@ -17,79 +31,144 @@ import StockScreen      from '../screens/StockScreen'
 const Stack  = createNativeStackNavigator()
 const Drawer = createDrawerNavigator()
 
-const screenOptions = { headerShown: false, contentStyle: { backgroundColor: colors.bg }, animation: 'slide_from_right' }
+const screenOptions = {
+  headerShown: false,
+  contentStyle: { backgroundColor: colors.bg },
+  animation: 'slide_from_right',
+}
 
-// Conteúdo customizado do menu lateral (drawer)
+// ── Conteúdo do menu lateral ─────────────────────────────
 function DrawerContent({ navigation, state }) {
   const { user, logout } = useAuth()
   const currentRoute = state?.routeNames?.[state?.index] || ''
+  const isAdmin = user?.role === 'admin'
 
   const menuItems = [
-    { name: 'Home',     label: 'Início',          emoji: '🏠' },
-    { name: 'Stock',    label: 'Estoque',          emoji: '📦' },
-    { name: 'MySales',  label: 'Minhas Vendas',    emoji: '🛒' },
+    { name: 'Home',    label: 'Início',        Icon: HomeIcon  },
+    { name: 'Stock',   label: 'Estoque',       Icon: BoxIcon   },
+    { name: 'MySales', label: 'Minhas Vendas', Icon: CartIcon  },
   ]
 
   return (
-    <DrawerContentScrollView style={{ backgroundColor: colors.surface }} contentContainerStyle={{ flex: 1 }}>
+    <DrawerContentScrollView
+      style={{ backgroundColor: colors.surface }}
+      contentContainerStyle={{ flex: 1 }}
+    >
       {/* Header do drawer */}
       <View style={drawerStyles.header}>
         <View style={drawerStyles.avatarBox}>
           <Text style={drawerStyles.avatarText}>{user?.name?.[0]?.toUpperCase()}</Text>
         </View>
-        <View>
-          <Text style={drawerStyles.userName}>{user?.name}</Text>
-          <Text style={drawerStyles.userRole}>Vendedor</Text>
+        <View style={{ flex: 1 }}>
+          <Text style={drawerStyles.userName} numberOfLines={1}>{user?.name}</Text>
+          <View style={drawerStyles.roleRow}>
+            {isAdmin
+              ? <ShieldIcon size={11} color={colors.brand} />
+              : <UserIcon size={11} color={colors.textMuted} />
+            }
+            <Text style={drawerStyles.userRole}>{isAdmin ? 'Administrador' : 'Vendedor'}</Text>
+          </View>
         </View>
       </View>
 
-      {/* Itens do menu */}
+      {/* Itens de menu */}
       <View style={drawerStyles.menuList}>
-        {menuItems.map(item => {
-          const isActive = currentRoute === item.name
+        {menuItems.map(({ name, label, Icon }) => {
+          const isActive = currentRoute === name
           return (
-            <TouchableOpacity key={item.name}
-              onPress={() => { navigation.navigate(item.name); navigation.closeDrawer() }}
+            <TouchableOpacity
+              key={name}
+              onPress={() => { navigation.navigate(name); navigation.closeDrawer() }}
               style={[drawerStyles.menuItem, isActive && drawerStyles.menuItemActive]}
-              activeOpacity={0.7}>
-              <Text style={drawerStyles.menuEmoji}>{item.emoji}</Text>
-              <Text style={[drawerStyles.menuLabel, isActive && { color: colors.brand }]}>{item.label}</Text>
-              {isActive && <View style={drawerStyles.activeIndicator} />}
+              activeOpacity={0.7}
+            >
+              <Icon
+                size={20}
+                color={isActive ? colors.brand : colors.textMuted}
+                strokeWidth={isActive ? 2 : 1.75}
+              />
+              <Text style={[drawerStyles.menuLabel, isActive && { color: colors.brand }]}>
+                {label}
+              </Text>
+              {isActive && (
+                <ChevronRight size={14} color={colors.brand} />
+              )}
             </TouchableOpacity>
           )
         })}
       </View>
 
-      {/* Logout */}
+      {/* Sair */}
       <TouchableOpacity style={drawerStyles.logoutBtn} onPress={logout} activeOpacity={0.7}>
-        <Text style={drawerStyles.logoutText}>↩ Sair da conta</Text>
+        <LogoutIcon size={18} color="#ef4444" />
+        <Text style={drawerStyles.logoutText}>Sair da conta</Text>
       </TouchableOpacity>
     </DrawerContentScrollView>
   )
 }
 
-// Stack para fluxo de Home → Nova Venda → Detalhe
-function HomeStack({ navigation }) {
+// ── Botão hamburger reutilizável ──────────────────────────
+// Recebe `navigation` do Drawer e abre o menu.
+// Usar DrawerActions.openDrawer() garante que funciona mesmo em stacks aninhadas.
+export function HamburgerButton({ navigation }) {
+  return (
+    <TouchableOpacity
+      onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+      style={drawerStyles.hamburger}
+      activeOpacity={0.7}
+      hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+    >
+      <View style={drawerStyles.hLine} />
+      <View style={[drawerStyles.hLine, { width: 14 }]} />
+      <View style={drawerStyles.hLine} />
+    </TouchableOpacity>
+  )
+}
+
+// ── Stacks ────────────────────────────────────────────────
+function HomeStack({ navigation: drawerNavigation }) {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      <Stack.Screen name="HomeMain" component={(props) => <HomeScreen {...props} drawerNav={navigation} />} />
+      <Stack.Screen
+        name="HomeMain"
+        component={(props) => (
+          <HomeScreen {...props} drawerNavigation={drawerNavigation} />
+        )}
+      />
       <Stack.Screen name="NewSale"    component={NewSaleScreen} />
       <Stack.Screen name="SaleDetail" component={SaleDetailScreen} />
     </Stack.Navigator>
   )
 }
 
-// Stack para minhas vendas
-function MySalesStack() {
+function StockStack({ navigation: drawerNavigation }) {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      <Stack.Screen name="MySalesMain" component={MySalesScreen} />
-      <Stack.Screen name="SaleDetail"  component={SaleDetailScreen} />
+      <Stack.Screen
+        name="StockMain"
+        component={(props) => (
+          <StockScreen {...props} drawerNavigation={drawerNavigation} />
+        )}
+      />
     </Stack.Navigator>
   )
 }
 
-// Drawer principal (menu lateral)
+function MySalesStack({ navigation: drawerNavigation }) {
+  return (
+    <Stack.Navigator screenOptions={screenOptions}>
+      <Stack.Screen
+        name="MySalesMain"
+        component={(props) => (
+          <MySalesScreen {...props} drawerNavigation={drawerNavigation} />
+        )}
+      />
+      <Stack.Screen name="SaleDetail" component={SaleDetailScreen} />
+    </Stack.Navigator>
+  )
+}
+
+// ── Drawer principal ──────────────────────────────────────
 function DrawerNavigator() {
   return (
     <Drawer.Navigator
@@ -98,16 +177,19 @@ function DrawerNavigator() {
         headerShown: false,
         drawerStyle: { backgroundColor: colors.surface, width: 280 },
         drawerType: 'slide',
-        overlayColor: 'rgba(0,0,0,0.5)',
+        overlayColor: 'rgba(0,0,0,0.6)',
+        swipeEnabled: true,
+        swipeEdgeWidth: 60,      // área de deslize da borda esquerda
       }}
     >
-      <Drawer.Screen name="Home"     component={HomeStack} />
-      <Drawer.Screen name="Stock"    component={StockScreen} />
-      <Drawer.Screen name="MySales"  component={MySalesStack} />
+      <Drawer.Screen name="Home"    component={HomeStack} />
+      <Drawer.Screen name="Stock"   component={StockStack} />
+      <Drawer.Screen name="MySales" component={MySalesStack} />
     </Drawer.Navigator>
   )
 }
 
+// ── Root ──────────────────────────────────────────────────
 export default function AppNavigator() {
   const { isAuthenticated, loading } = useAuth()
   if (loading) return <LoadingScreen message="Iniciando MotoVendas..." />
@@ -125,17 +207,45 @@ export default function AppNavigator() {
 }
 
 const drawerStyles = StyleSheet.create({
-  header: { flexDirection: 'row', alignItems: 'center', gap: 14, padding: 20, paddingBottom: 24, borderBottomWidth: 1, borderBottomColor: colors.border },
-  avatarBox: { width: 48, height: 48, borderRadius: 24, backgroundColor: colors.brandBg, borderWidth: 2, borderColor: colors.brandBorder, alignItems: 'center', justifyContent: 'center' },
-  avatarText: { color: colors.brand, fontSize: 20, fontWeight: '900' },
-  userName: { color: colors.textPrimary, fontSize: 15, fontWeight: '700' },
-  userRole: { color: colors.textMuted, fontSize: 12, marginTop: 2 },
-  menuList: { paddingHorizontal: 12, paddingTop: 16, gap: 4 },
-  menuItem: { flexDirection: 'row', alignItems: 'center', gap: 14, paddingHorizontal: 14, paddingVertical: 13, borderRadius: 12 },
+  header: {
+    flexDirection: 'row', alignItems: 'center', gap: 12,
+    padding: 20, paddingBottom: 20,
+    borderBottomWidth: 1, borderBottomColor: colors.border,
+  },
+  avatarBox: {
+    width: 46, height: 46, borderRadius: 23,
+    backgroundColor: colors.brandBg,
+    borderWidth: 1.5, borderColor: colors.brandBorder,
+    alignItems: 'center', justifyContent: 'center',
+  },
+  avatarText: { color: colors.brand, fontSize: 19, fontWeight: '900' },
+  userName:   { color: colors.textPrimary, fontSize: 14, fontWeight: '700' },
+  roleRow:    { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 3 },
+  userRole:   { color: colors.textMuted, fontSize: 11 },
+  menuList:   { paddingHorizontal: 10, paddingTop: 14, gap: 2 },
+  menuItem: {
+    flexDirection: 'row', alignItems: 'center', gap: 13,
+    paddingHorizontal: 14, paddingVertical: 13, borderRadius: 12,
+  },
   menuItemActive: { backgroundColor: colors.brandBg },
-  menuEmoji: { fontSize: 20, width: 28, textAlign: 'center' },
   menuLabel: { flex: 1, color: colors.textSecondary, fontSize: 15, fontWeight: '600' },
-  activeIndicator: { width: 6, height: 6, borderRadius: 3, backgroundColor: colors.brand },
-  logoutBtn: { margin: 20, marginTop: 'auto', padding: 14, backgroundColor: 'rgba(239,68,68,0.1)', borderWidth: 1, borderColor: 'rgba(239,68,68,0.2)', borderRadius: 12, alignItems: 'center' },
+  logoutBtn: {
+    flexDirection: 'row', alignItems: 'center', gap: 10,
+    margin: 16, marginTop: 'auto',
+    padding: 14,
+    backgroundColor: 'rgba(239,68,68,0.08)',
+    borderWidth: 1, borderColor: 'rgba(239,68,68,0.18)',
+    borderRadius: 12,
+  },
   logoutText: { color: '#ef4444', fontSize: 14, fontWeight: '700' },
+  // Hamburguer
+  hamburger: {
+    width: 38, height: 38, justifyContent: 'center', gap: 5,
+    paddingHorizontal: 4,
+  },
+  hLine: {
+    height: 2, width: 20,
+    backgroundColor: colors.textSecondary,
+    borderRadius: 1,
+  },
 })

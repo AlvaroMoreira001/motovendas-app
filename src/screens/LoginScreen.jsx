@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingVi
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useAuth } from '../context/AuthContext'
 import { colors } from '../constants'
+import { MotoIcon, AlertIcon } from '../components/Icons'
 
 export default function LoginScreen() {
   const { login } = useAuth()
@@ -27,7 +28,7 @@ export default function LoginScreen() {
         <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
           <View style={styles.header}>
             <View style={styles.logoBox}>
-              <Text style={styles.logoEmoji}>🏍️</Text>
+              <MotoIcon size={38} color="#fff" strokeWidth={1.6} />
             </View>
             <Text style={styles.appName}>MOTOVENDAS</Text>
             <Text style={styles.subtitle}>App do Vendedor</Text>
@@ -68,7 +69,14 @@ export default function LoginScreen() {
               </View>
             </View>
 
-            {error ? <View style={styles.errorBox}><Text style={styles.errorText}>⚠️  {error}</Text></View> : null}
+            {error ? (
+              <View style={styles.errorBox}>
+                <View style={styles.errorRow}>
+                  <AlertIcon size={18} color={colors.error} />
+                  <Text style={styles.errorText}>{error}</Text>
+                </View>
+              </View>
+            ) : null}
 
             <TouchableOpacity style={[styles.loginBtn,loading&&{opacity:0.6}]} onPress={handleLogin} disabled={loading} activeOpacity={0.8}>
               <Text style={styles.loginBtnText}>{loading?'Entrando...':'Entrar'}</Text>
@@ -87,7 +95,7 @@ const styles = StyleSheet.create({
   scroll:{flexGrow:1,padding:24,justifyContent:'center'},
   header:{alignItems:'center',marginBottom:40},
   logoBox:{width:80,height:80,backgroundColor:colors.brand,borderRadius:20,alignItems:'center',justifyContent:'center',marginBottom:16,shadowColor:colors.brand,shadowOffset:{width:0,height:8},shadowOpacity:0.4,shadowRadius:16,elevation:10},
-  logoEmoji:{fontSize:38},
+  errorRow:{flexDirection:'row',alignItems:'center',gap:8},
   appName:{color:colors.textPrimary,fontSize:32,fontWeight:'900',letterSpacing:4,marginBottom:4},
   subtitle:{color:colors.textMuted,fontSize:13,letterSpacing:2,textTransform:'uppercase'},
   form:{backgroundColor:colors.surface,borderWidth:1,borderColor:colors.border,borderRadius:20,padding:24,gap:16},

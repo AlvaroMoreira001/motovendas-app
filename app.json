@@ -31,8 +31,7 @@
           "photosPermission": "Permite acessar a galeria para foto dos produtos.",
           "cameraPermission": "Permite usar a câmera para foto dos produtos."
         }
-      ],
-      "expo-font"
+      ]
     ],
     "extra": {
       "eas": {

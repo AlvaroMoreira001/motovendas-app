@@ -10,6 +10,8 @@ import { useQuery } from '@tanstack/react-query'
 import { salesService } from '../services/api'
 import { colors, formatCurrency, formatDate } from '../constants'
 import { LoadingScreen, StatusBadge, EmptyState } from '../components/ui'
+import { CartIcon } from '../components/Icons'
+import { HamburgerButton } from '../navigation/AppNavigator'
 
 const STATUS_FILTERS = [
   { value: '', label: 'Todas' },
@@ -18,7 +20,7 @@ const STATUS_FILTERS = [
   { value: 'cancelled', label: 'Canceladas' },
 ]
 
-export default function MySalesScreen({ navigation }) {
+export default function MySalesScreen({ navigation, drawerNavigation }) {
   const [statusFilter, setStatusFilter] = useState('')
 
   const { data: sales = [], isLoading, refetch, isRefetching } = useQuery({
@@ -47,7 +49,7 @@ export default function MySalesScreen({ navigation }) {
           <Text style={styles.saleEvent}>{sale.event?.name}</Text>
           <Text style={styles.saleDate}>{formatDate(sale.createdAt)}</Text>
           {sale.paymentMethod && (
-            <Text style={styles.salePayment}>💳 {sale.paymentMethod}</Text>
+            <Text style={styles.salePayment}>{sale.paymentMethod}</Text>
           )}
         </View>
         <Text style={styles.saleTotal}>{formatCurrency(sale.total)}</Text>
@@ -76,9 +78,7 @@ export default function MySalesScreen({ navigation }) {
 
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-          <Text style={{ color: colors.textMuted, fontSize: 20 }}>‹</Text>
-        </TouchableOpacity>
+        <HamburgerButton navigation={drawerNavigation} />
         <Text style={styles.headerTitle}>Minhas Vendas</Text>
         <View style={{ width: 36 }} />
       </View>
@@ -122,7 +122,7 @@ export default function MySalesScreen({ navigation }) {
         refreshing={isRefetching}
         ListEmptyComponent={
           <EmptyState
-            icon="🛒"
+            icon={<CartIcon size={48} color={colors.textMuted} />}
             title="Nenhuma venda encontrada"
             description="Suas vendas aparecerão aqui após serem registradas."
           />

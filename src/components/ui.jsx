@@ -36,9 +36,16 @@ export function ErrorMessage({ message }) {
 
 // ── Estado vazio ──────────────────────────────────────────
 export function EmptyState({ icon, title, description }) {
+  const iconNode =
+    icon == null
+      ? null
+      : typeof icon === 'string'
+        ? <Text style={{ fontSize: 48, marginBottom: 12 }}>{icon}</Text>
+        : <View style={{ marginBottom: 12 }}>{icon}</View>
+
   return (
     <View style={styles.center}>
-      <Text style={{ fontSize: 48, marginBottom: 12 }}>{icon}</Text>
+      {iconNode}
       <Text style={styles.emptyTitle}>{title}</Text>
       {description && <Text style={styles.emptyDesc}>{description}</Text>}
     </View>
