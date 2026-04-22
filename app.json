@@ -20,8 +20,9 @@
       "package": "com.motovendas.app",
       "versionCode": 1,
       "permissions": [
-        "INTERNET",
-        "ACCESS_NETWORK_STATE"
+        "android.permission.INTERNET",
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.RECORD_AUDIO"
       ]
     },
     "plugins": [
@@ -34,6 +35,10 @@
         }
       ]
     ],
-    "extra": {}
+    "extra": {
+      "eas": {
+        "projectId": "134a6392-6199-43cc-804e-37cbc836866c"
+      }
+    }
   }
 }
