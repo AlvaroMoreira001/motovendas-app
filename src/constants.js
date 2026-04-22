@@ -4,7 +4,7 @@
  */
 
 // ── URL do backend ─────────────────────────────────────────
-export const API_URL = 'http://192.168.15.166:3000'
+export const API_URL = 'https://motovendas-backend-production.up.railway.app'
 // ATENÇÃO: Em desenvolvimento, use o IP local da sua máquina
 // (não use "localhost" — o celular não consegue acessar)
 // Para descobrir seu IP: no terminal, rode "ipconfig" (Windows) ou "ifconfig" (Mac/Linux)
