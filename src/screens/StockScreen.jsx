@@ -16,7 +16,7 @@ import { eventsService, productsService } from '../services/api'
 import { useAuth } from '../context/AuthContext'
 import { colors, formatCurrency, CATEGORIES, resolveImageUrl } from '../constants'
 import { LoadingScreen, Spinner } from '../components/ui'
-import { HamburgerButton } from '../navigation/AppNavigator'
+import { HamburgerButton } from '../navigation/HamburgerButton'
 import {
   SearchIcon, CloseIcon, PlusIcon, MinusIcon,
   BoxIcon, CameraIcon, ImageIcon, TrashIcon, EditIcon,

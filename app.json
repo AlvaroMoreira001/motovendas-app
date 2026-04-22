@@ -12,6 +12,7 @@
       "backgroundColor": "#0a0a0b"
     },
     "android": {
+      "usesCleartextTraffic": true,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ff7c0a"

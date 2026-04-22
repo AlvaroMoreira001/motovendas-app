@@ -9,7 +9,7 @@ import { eventsService, salesService } from '../services/api'
 import { useAuth } from '../context/AuthContext'
 import { colors, formatCurrency, formatDate } from '../constants'
 import { StatusBadge, LoadingScreen } from '../components/ui'
-import { HamburgerButton } from '../navigation/AppNavigator'
+import { HamburgerButton } from '../navigation/HamburgerButton'
 import {
   MapPinIcon, CalendarIcon, ZapIcon,
   CartIcon, LogoutIcon, CheckIcon,

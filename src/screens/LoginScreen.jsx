@@ -16,8 +16,17 @@ export default function LoginScreen() {
   const handleLogin = async () => {
     if (!email.trim() || !password) { setError('Preencha email e senha.'); return }
     setError(''); setLoading(true)
-    try { await login(email.trim().toLowerCase(), password) }
-    catch (err) { setError(err.response?.data?.error || 'Credenciais inválidas. Tente novamente.') }
+    try {
+      await login(email.trim().toLowerCase(), password)
+    } catch (err) {
+      const apiMsg = err.response?.data?.error
+      if (apiMsg) setError(apiMsg)
+      else if (err.code === 'ECONNABORTED' || err.message?.includes('Network Error'))
+        setError('Sem conexão com o servidor. Confira o IP em constants.js (API_URL), Wi‑Fi e se o backend escuta em 0.0.0.0.')
+      else if (err.request && !err.response)
+        setError('Servidor não respondeu. Verifique API_URL e firewall (porta 3000).')
+      else setError(err.message || 'Credenciais inválidas. Tente novamente.')
+    }
     finally { setLoading(false) }
   }
 

@@ -8,9 +8,8 @@
  * - Todos os headers das telas Stack têm o botão de menu explícito.
  */
 
-import { useEffect } from 'react'
-import { View, Text, TouchableOpacity, StyleSheet, StatusBar } from 'react-native'
-import { NavigationContainer, DrawerActions } from '@react-navigation/native'
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
+import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createDrawerNavigator, DrawerContentScrollView } from '@react-navigation/drawer'
 import { useAuth } from '../context/AuthContext'
@@ -104,24 +103,6 @@ function DrawerContent({ navigation, state }) {
         <Text style={drawerStyles.logoutText}>Sair da conta</Text>
       </TouchableOpacity>
     </DrawerContentScrollView>
-  )
-}
-
-// ── Botão hamburger reutilizável ──────────────────────────
-// Recebe `navigation` do Drawer e abre o menu.
-// Usar DrawerActions.openDrawer() garante que funciona mesmo em stacks aninhadas.
-export function HamburgerButton({ navigation }) {
-  return (
-    <TouchableOpacity
-      onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-      style={drawerStyles.hamburger}
-      activeOpacity={0.7}
-      hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-    >
-      <View style={drawerStyles.hLine} />
-      <View style={[drawerStyles.hLine, { width: 14 }]} />
-      <View style={drawerStyles.hLine} />
-    </TouchableOpacity>
   )
 }
 
@@ -238,14 +219,4 @@ const drawerStyles = StyleSheet.create({
     borderRadius: 12,
   },
   logoutText: { color: '#ef4444', fontSize: 14, fontWeight: '700' },
-  // Hamburguer
-  hamburger: {
-    width: 38, height: 38, justifyContent: 'center', gap: 5,
-    paddingHorizontal: 4,
-  },
-  hLine: {
-    height: 2, width: 20,
-    backgroundColor: colors.textSecondary,
-    borderRadius: 1,
-  },
 })

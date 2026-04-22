@@ -11,7 +11,7 @@ import { salesService } from '../services/api'
 import { colors, formatCurrency, formatDate } from '../constants'
 import { LoadingScreen, StatusBadge, EmptyState } from '../components/ui'
 import { CartIcon } from '../components/Icons'
-import { HamburgerButton } from '../navigation/AppNavigator'
+import { HamburgerButton } from '../navigation/HamburgerButton'
 
 const STATUS_FILTERS = [
   { value: '', label: 'Todas' },
